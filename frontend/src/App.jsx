@@ -21,6 +21,8 @@ import AdminEvents from './pages/admin/Events'
 import AdminQuotations from './pages/admin/Quotations'
 import AdminNotices from './pages/admin/Notices'
 import AdminReports from './pages/admin/Reports'
+import AdminManagement from './pages/admin/AdminManagement'
+
 
 // Teacher
 import TeacherDashboard from './pages/teacher/Dashboard'
@@ -73,6 +75,8 @@ export default function App() {
           <Route path="/admin/quotations" element={<Protected role="ADMIN"><AdminQuotations /></Protected>} />
           <Route path="/admin/notices" element={<Protected role="ADMIN"><AdminNotices /></Protected>} />
           <Route path="/admin/reports" element={<Protected role="ADMIN"><AdminReports /></Protected>} />
+          <Route path="/admin/admin-management" element={<Protected role="ADMIN"><AdminManagement /></Protected>} />
+
 
           {/* Teacher */}
           <Route path="/teacher" element={<Protected role="TEACHER"><TeacherDashboard /></Protected>} />

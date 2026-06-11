@@ -1,0 +1,9 @@
+{
+  "appId": "com.schoolerp.app",
+  "appName": "School ERP",
+  "webDir": "dist",
+  "server": {
+    "url": "https://school-erp-five-sable.vercel.app/",
+    "cleartext": true
+  }
+}

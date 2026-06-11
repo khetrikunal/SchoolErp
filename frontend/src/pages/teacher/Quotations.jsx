@@ -135,11 +135,23 @@ export default function TeacherQuotations() {
               </table>
             </div>
             {sel.adminRemarks && (
-              <div className={`p-3 rounded-xl border ${sel.status === 'Approved' ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'}`}>
-                <p className="text-sm font-bold">Admin Decision: <StatusBadge status={sel.status} /></p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{sel.adminRemarks}</p>
+              <div
+                className={`p-3 rounded-xl border ${
+                  sel.status === 'Approved'
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700'
+                    : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700'
+                }`}
+              >
+                <p className="text-xs sm:text-sm font-bold leading-relaxed flex flex-wrap gap-2 items-center">
+                  <span className="whitespace-nowrap">Admin Decision:</span>
+                  <span className="flex-shrink-0"><StatusBadge status={sel.status} /></span>
+                </p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed break-words">
+                  {sel.adminRemarks}
+                </p>
               </div>
             )}
+
           </div>
         )}
       </Modal>

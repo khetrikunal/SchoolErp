@@ -18,8 +18,9 @@ export const authService = {
       ? { email: loginInput, password }
       : { identifier: loginInput, password }
 
-    // Vite dev server should proxy /api -> backend
+    // Backend endpoint is /api/auth/login
     const res = await apiPost('/api/auth/login', body)
+
 
     // Expected by AuthContext: token or token nested inside
     return unwrapApiResponse(res)
