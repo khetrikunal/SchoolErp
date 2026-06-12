@@ -13,12 +13,15 @@ import com.schoolerp.repository.TeacherRepository;
 import com.schoolerp.repository.UserRepository;
 import com.schoolerp.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminUserServiceImpl implements AdminUserService {
+
 
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
@@ -27,21 +30,38 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public User createAdmin(AdminCreateUserRequest req) {
-        if (userRepository.existsByEmail(req.getEmail())) {
+        String email = req.getEmail();
+        String name = req.getName();
+        String phone = req.getPhone();
+
+        log.info("[AdminUserServiceImpl] createAdmin START email={} name={} phone={}", email, name, phone);
+
+        if (userRepository.existsByEmail(email)) {
+            log.warn("[AdminUserServiceImpl] createAdmin aborted: email already registered email={}", email);
             throw new ValidationException("Email already registered");
         }
 
         User user = User.builder()
-            .name(req.getName())
-            .email(req.getEmail())
+            .name(name)
+            .email(email)
             .password(passwordEncoder.encode(req.getPassword()))
             .role(Role.ADMIN)
             .designation("Admin")
-            .phone(req.getPhone())
+            .phone(phone)
             .build();
 
-        return userRepository.save(user);
+        log.debug("[AdminUserServiceImpl] createAdmin saving user email={} role={}", user.getEmail(), user.getRole());
+        try {
+            User saved = userRepository.save(user);
+            log.info("[AdminUserServiceImpl] createAdmin SUCCESS email={} id={}", saved.getEmail(), saved.getId());
+            return saved;
+        } catch (Exception ex) {
+            // Re-throw (no swallowing) so the global handler can map to correct HTTP codes.
+            log.error("[AdminUserServiceImpl] createAdmin FAILED email={} exClass={} exMsg={}", email, ex.getClass().getName(), ex.getMessage(), ex);
+            throw ex;
+        }
     }
+
 
     @Override
     public User createTeacher(TeacherCreateUserRequest req) {
