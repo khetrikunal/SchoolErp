@@ -31,7 +31,7 @@ export default function Quotations() {
         {[{label:'Pending Review',count:counts.Pending,style:'border-amber-300 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300'},
           {label:'Approved',count:counts.Approved,style:'border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300'},
           {label:'Rejected',count:counts.Rejected,style:'border-red-300 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300'}].map(s=>(
-          <div key={s.label} className={`card border-2 p-4 text-center ${s.style}`}>
+          <div key={s.label} className={`card border-2 p-6 text-center ${s.style} flex flex-col justify-center`}>
             <p className="text-3xl font-display font-bold">{s.count}</p>
             <p className="text-sm font-semibold mt-0.5">{s.label}</p>
           </div>
@@ -49,14 +49,14 @@ export default function Quotations() {
       <div className="space-y-3">
         {filtered.length===0 ? <div className="card p-6"><EmptyStateInline/></div>
         : filtered.map(qn=>(
-          <div key={qn.id} className="card hover:shadow-lg transition-all">
+          <div key={qn.id} className="card hover:shadow-lg transition-all p-5">
             <div className="flex flex-col sm:flex-row sm:items-start gap-4">
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <span className="badge badge-info">{qn.eventName}</span>
                   <StatusBadge status={qn.status}/>
                 </div>
-                <h3 className="font-display font-bold text-gray-900 dark:text-white">{qn.title}</h3>
+                <h3 className="font-display font-bold text-gray-900 dark:text-white break-words">{qn.title}</h3>
                 <div className="flex items-center gap-2 mt-1">
                   <Avatar name={qn.teacherName} size="sm"/>
                   <span className="text-sm text-gray-500">{qn.teacherName} · {fmt(qn.createdAt)}</span>
@@ -77,29 +77,29 @@ export default function Quotations() {
           <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
               {[['Event',sel.eventName],['Teacher',sel.teacherName],['Submitted',fmt(sel.createdAt)],['Total',currency(sel.totalAmount)]].map(([k,v])=>(
-                <div key={k} className="p-3 bg-gray-50 dark:bg-gray-700/40 rounded-xl"><p className="text-xs text-gray-400 mb-0.5">{k}</p><p className="font-bold text-gray-800 dark:text-gray-200">{v}</p></div>
+                <div key={k} className="p-4 bg-gray-50 dark:bg-gray-700/40 rounded-xl flex flex-col justify-center"><p className="text-xs text-gray-400 mb-0.5">{k}</p><p className="font-bold text-gray-800 dark:text-gray-200">{v}</p></div>
               ))}
             </div>
             <div>
               <h4 className="font-bold text-gray-700 dark:text-gray-300 mb-2">Line Items</h4>
               <div className="overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-700">
-                <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-700">
-                  <thead><tr>{['Material','Qty','Unit','Unit Cost','Total','Vendor'].map(h=><th key={h} className="th">{h}</th>)}</tr></thead>
+                <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-700 table-auto">
+                  <thead><tr>{['Material','Qty','Unit','Unit Cost','Total','Vendor'].map(h=><th key={h} className="th px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">{h}</th>)}</tr></thead>
                   <tbody className="divide-y divide-gray-50 dark:divide-gray-700/50 bg-white dark:bg-gray-800">
                     {sel.items.map(item=>(
                       <tr key={item.id} className="tr-hover">
-                        <td className="td font-semibold">{item.material}</td>
-                        <td className="td">{item.quantity}</td>
-                        <td className="td text-gray-400">{item.unit}</td>
-                        <td className="td">{currency(item.unitCost)}</td>
-                        <td className="td font-bold text-primary-600 dark:text-primary-400">{currency(item.total)}</td>
-                        <td className="td text-gray-400 text-xs">{item.vendor}</td>
+                        <td className="td px-4 py-3 whitespace-nowrap font-semibold">{item.material}</td>
+                        <td className="td px-4 py-3 whitespace-nowrap">{item.quantity}</td>
+                        <td className="td px-4 py-3 whitespace-nowrap text-gray-400">{item.unit}</td>
+                        <td className="td px-4 py-3 whitespace-nowrap">{currency(item.unitCost)}</td>
+                        <td className="td px-4 py-3 whitespace-nowrap font-bold text-primary-600 dark:text-primary-400">{currency(item.total)}</td>
+                        <td className="td px-4 py-3 whitespace-nowrap text-gray-400 text-xs">{item.vendor}</td>
                       </tr>
                     ))}
                     <tr className="bg-gray-50 dark:bg-gray-800/60">
-                      <td colSpan={4} className="td text-right font-bold">Grand Total:</td>
-                      <td className="td font-bold text-primary-600 dark:text-primary-400 text-base">{currency(sel.totalAmount)}</td>
-                      <td className="td"></td>
+                      <td colSpan={4} className="td px-4 py-3 whitespace-nowrap text-right font-bold">Grand Total:</td>
+                      <td className="td px-4 py-3 whitespace-nowrap font-bold text-primary-600 dark:text-primary-400 text-base">{currency(sel.totalAmount)}</td>
+                      <td className="td px-4 py-3 whitespace-nowrap"></td>
                     </tr>
                   </tbody>
                 </table>

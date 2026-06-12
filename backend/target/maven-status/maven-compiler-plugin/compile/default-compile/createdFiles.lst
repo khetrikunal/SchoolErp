@@ -36,7 +36,6 @@ com\schoolerp\controller\PromotionController$PromoteRequest.class
 com\schoolerp\service\PromotionService.class
 com\schoolerp\security\service\UserDetailsServiceImpl.class
 com\schoolerp\model\Class.class
-com\schoolerp\serviceImpl\AdminUserServiceImpl.class
 com\schoolerp\model\Quotation.class
 com\schoolerp\repository\AttendanceRepository.class
 com\schoolerp\serviceImpl\ClassServiceImpl.class
