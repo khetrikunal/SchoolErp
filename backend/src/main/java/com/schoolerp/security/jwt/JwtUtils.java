@@ -74,6 +74,12 @@ public class JwtUtils {
         return parseClaims(token).getSubject();
     }
 
+    public String extractRole(String token) {
+        Object role = parseClaims(token).get("role");
+        return role == null ? null : role.toString();
+    }
+
+
     public boolean validateToken(String token) {
         try { parseClaims(token); return true; }
         catch (JwtException | IllegalArgumentException e) { return false; }

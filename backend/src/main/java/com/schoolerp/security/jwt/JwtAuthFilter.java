@@ -44,16 +44,40 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (token != null) {
             boolean valid = jwtUtils.validateToken(token);
-            log.debug("[JwtAuthFilter] JWT validation result={}", valid);
+            log.debug("[JwtAuthFilter] Authorization token present. valid={}", valid);
+            log.debug("[JwtAuthFilter] token={}", token);
+
             if (valid) {
                 String email = jwtUtils.extractEmail(token);
+                String role = jwtUtils.extractRole(token);
+
+                log.debug("[JwtAuthFilter] extracted email={}", email);
+                log.debug("[JwtAuthFilter] extracted role(claim)={}", role);
+
+                // Still load user details for potential additional info, but build authorities from JWT role claim.
                 UserDetails ud = userDetailsService.loadUserByUsername(email);
-                var auth = new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities());
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                String normalizedRole = role == null ? null : role.trim();
+                String springRole = normalizedRole == null ? null : (normalizedRole.startsWith("ROLE_") ? normalizedRole : "ROLE_" + normalizedRole);
+
+                if (springRole == null || springRole.isBlank()) {
+                    log.warn("[JwtAuthFilter] Missing/blank role in JWT. Not setting authentication.");
+                } else {
+                    var grantedAuthorities = java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority(springRole));
+                    log.debug("[JwtAuthFilter] grantedAuthorities={}", grantedAuthorities);
+
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        ud,
+                        null,
+                        grantedAuthorities
+                    );
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
         }
         chain.doFilter(req, res);
+
     }
 
     private String parseJwt(HttpServletRequest req) {
