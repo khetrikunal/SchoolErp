@@ -23,4 +23,5 @@ public class Homework {
     private String createdBy;
     private Integer totalStudents;
     private Integer submissions = 0;
+    private String attachmentUrl;
 }

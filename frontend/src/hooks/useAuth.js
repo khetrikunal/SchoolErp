@@ -59,6 +59,15 @@ function inferUserFromJwt(payload) {
     role: normalizedRole,
     designation,
     id: payload.id || payload.userId,
+    classes: payload.classes || [],
+    class: payload.class || '',
+    section: payload.section || '',
+    rollNo: payload.rollNo || '',
+    phone: payload.phone || '',
+    admissionYear: payload.admissionYear || '',
+    parentName: payload.parentName || '',
+    studentId: payload.studentId || '',
+    teacherId: payload.teacherId || '',
   }
 }
 
@@ -67,36 +76,41 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   const syncFromToken = useCallback(() => {
-    console.groupCollapsed('[useAuth] syncFromToken')
     const token = localStorage.getItem('erp_token')
-    console.log('[useAuth] localStorage.erp_token exists:', Boolean(token))
 
     if (!token) {
       setUser(null)
       setLoading(false)
-      console.groupEnd()
       return
     }
 
     const payload = decodeJwt(token)
-    console.log('[useAuth] decoded JWT payload:', payload)
-
-    const decodedUser = inferUserFromJwt(payload)
-    console.log('[useAuth] inferUserFromJwt result:', decodedUser)
-
-    if (!decodedUser) {
-      // invalid token payload => treat as logged out
-      console.warn('[useAuth] decodedUser missing => clearing erp_token')
+    if (!payload) {
       localStorage.removeItem('erp_token')
       setUser(null)
       setLoading(false)
-      console.groupEnd()
+      return
+    }
+
+    // Check JWT expiry
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      localStorage.removeItem('erp_token')
+      setUser(null)
+      setLoading(false)
+      return
+    }
+
+    const decodedUser = inferUserFromJwt(payload)
+
+    if (!decodedUser) {
+      localStorage.removeItem('erp_token')
+      setUser(null)
+      setLoading(false)
       return
     }
 
     setUser(decodedUser)
     setLoading(false)
-    console.groupEnd()
   }, [])
 
   useEffect(() => {

@@ -39,19 +39,19 @@ export default function Events() {
         <div><h1 className="page-title">Event Management</h1><p className="text-sm text-gray-500">{data.length} events · Teacher access control</p></div>
         <button onClick={()=>{setForm(BLANK);setModal('add')}} className="btn-primary"><Plus size={15}/>Create Event</button>
       </div>
-      <div className="card p-4"><SearchInput value={q} onChange={setQ} placeholder="Search events..." className="max-w-sm"/></div>
+      <div className="card p-5"><SearchInput value={q} onChange={setQ} placeholder="Search events..." className="max-w-sm"/></div>
 
-      {filtered.length===0 ? <div className="card p-6"><EmptyState icon={Trophy} title="No events found"/></div>
+      {filtered.length===0 ? <div className="card p-6 flex flex-col justify-center"><EmptyState icon={Trophy} title="No events found"/></div>
       : <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filtered.map(ev=>{
             const assigned = teachers.filter(t=>(ev.assignedTeacherIds||[]).includes(t.id))
             return (
-              <div key={ev.id} className="card hover:shadow-lg transition-all">
+              <div key={ev.id} className="card hover:shadow-lg transition-all p-5">
                 <div className="flex items-start justify-between mb-2">
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${TYPE_COLORS[ev.type]||TYPE_COLORS.Other}`}>{ev.type}</span>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${TYPE_COLORS[ev.type]||TYPE_COLORS.Other}`}>{ev.type}</span>
                   <StatusBadge status={ev.status}/>
                 </div>
-                <h3 className="font-display font-bold text-gray-900 dark:text-white text-base mt-1 mb-2">{ev.name}</h3>
+                <h3 className="font-display font-bold text-gray-900 dark:text-white text-base mt-1 mb-2 break-words">{ev.name}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3">{ev.description}</p>
                 <div className="space-y-1 text-xs text-gray-500 mb-4">
                   <div className="flex items-center gap-1.5"><Calendar size={12} className="text-primary-500"/><span>{fmt(ev.date)} · {ev.time}</span></div>
@@ -92,7 +92,7 @@ export default function Events() {
             {teachers.map(t=>{
               const chk = (form.assignedTeacherIds||[]).includes(t.id)
               return (
-                <label key={t.id} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition ${chk?'border-primary-500 bg-primary-50 dark:bg-primary-900/20':'border-gray-100 dark:border-gray-700 hover:border-primary-200'}`}>
+                <label key={t.id} className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition ${chk?'border-primary-500 bg-primary-50 dark:bg-primary-900/20':'border-gray-100 dark:border-gray-700 hover:border-primary-200'}`}>
                   <input type="checkbox" checked={chk} onChange={()=>toggleTeacher(t.id)} className="rounded text-primary-600 w-4 h-4"/>
                   <Avatar name={t.name} size="sm"/>
                   <div><p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t.name}</p><p className="text-xs text-gray-400">{t.subjects.slice(0,2).join(', ')}</p></div>
@@ -116,7 +116,7 @@ export default function Events() {
           {teachers.map(t=>{
             const chk = (form.assignedTeacherIds||[]).includes(t.id)
             return (
-              <label key={t.id} className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition ${chk?'border-primary-500 bg-primary-50 dark:bg-primary-900/20':'border-gray-100 dark:border-gray-700 hover:border-primary-200'}`}>
+              <label key={t.id} className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition ${chk?'border-primary-500 bg-primary-50 dark:bg-primary-900/20':'border-gray-100 dark:border-gray-700 hover:border-primary-200'}`}>
                 <input type="checkbox" checked={chk} onChange={()=>toggleTeacher(t.id)} className="rounded text-primary-600 w-4 h-4"/>
                 <Avatar name={t.name} size="sm"/>
                 <div className="flex-1"><p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{t.name}</p><p className="text-xs text-gray-400">{t.empId} · {t.subjects.join(', ')}</p></div>
@@ -143,7 +143,7 @@ export default function Events() {
             <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/40 p-3 rounded-xl">{sel.description}</p>
             <div className="grid grid-cols-2 gap-2">
               {[['Date',fmt(sel.date)],['Time',sel.time],['Venue',sel.venue],['Budget',currency(sel.budget)]].map(([k,v])=>(
-                <div key={k} className="p-3 bg-gray-50 dark:bg-gray-700/40 rounded-xl"><p className="text-xs text-gray-400 mb-0.5">{k}</p><p className="font-bold text-gray-800 dark:text-gray-200">{v}</p></div>
+                <div key={k} className="p-4 bg-gray-50 dark:bg-gray-700/40 rounded-xl flex flex-col justify-center"><p className="text-xs text-gray-400 mb-0.5">{k}</p><p className="font-bold text-gray-800 dark:text-gray-200">{v}</p></div>
               ))}
             </div>
             <div className="p-3 bg-gray-50 dark:bg-gray-700/40 rounded-xl">

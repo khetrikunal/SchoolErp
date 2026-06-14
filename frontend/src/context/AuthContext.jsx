@@ -12,22 +12,8 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     setLoginLoading(true)
-    console.groupCollapsed('[AuthContext] login')
-    console.log('[AuthContext] login called')
-    console.log('[AuthContext] credentials email:', email)
-
     try {
-      console.log('[AuthContext] calling authService.login')
       const res = await authService.login({ email, password })
-      console.log('[AuthContext] authService.login response:', res)
-
-
-      // Handle multiple possible response shapes
-      // Supported:
-      //  - { token: "..." }
-      //  - { accessToken: "..." }
-      //  - { data: { token: "..." } }
-      //  - nested: res.data.data.token, etc.
       const token =
         res?.token ||
         res?.accessToken ||
@@ -36,24 +22,16 @@ export function AuthProvider({ children }) {
         res?.data?.data?.token ||
         res?.data?.data?.accessToken
 
-      console.log('[AuthContext] extracted token:', token ? '[present]' : '[missing]')
       if (!token) throw new Error('Login failed: token missing')
-
-      console.log('[AuthContext] writing localStorage.erp_token')
       localStorage.setItem('erp_token', token)
-      console.log('localStorage.erp_token exists after set:', Boolean(localStorage.getItem('erp_token')))
 
-      // Notify listeners in the same tab that token is now available.
       window.dispatchEvent(new Event('auth-token-changed'))
-
       return res
     } catch (err) {
-      console.error('[AuthContext] login failed:', err)
       const msg = err?.response?.data?.message || err?.message || 'Login failed'
       throw new Error(msg)
     } finally {
       setLoginLoading(false)
-      console.groupEnd()
     }
   }
 

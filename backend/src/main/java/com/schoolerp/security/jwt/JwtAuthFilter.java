@@ -4,6 +4,7 @@ import com.schoolerp.security.service.UserDetailsServiceImpl;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
@@ -23,13 +25,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
-        // Skip login endpoint to avoid JWT filter causing auth/403 side-effects
         String servletPath = req.getServletPath();
-        System.out.println("[JwtAuthFilter] servletPath=" + servletPath);
+        log.debug("[JwtAuthFilter] servletPath={}", servletPath);
 
-        // Also skip any sub-path under /api/auth (robustness)
+        // Skip any sub-path under /api/auth
         if (servletPath != null && servletPath.startsWith("/api/auth/")) {
-            System.out.println("[JwtAuthFilter] skipping JWT validation for auth endpoint: " + servletPath);
             chain.doFilter(req, res);
             return;
         }
@@ -40,14 +40,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-
-
         String token = parseJwt(req);
-        System.out.println("[JwtAuthFilter] parsed token present=" + (token != null));
 
         if (token != null) {
             boolean valid = jwtUtils.validateToken(token);
-            System.out.println("[JwtAuthFilter] JWT validation result=" + valid);
+            log.debug("[JwtAuthFilter] JWT validation result={}", valid);
             if (valid) {
                 String email = jwtUtils.extractEmail(token);
                 UserDetails ud = userDetailsService.loadUserByUsername(email);
@@ -66,3 +63,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         return null;
     }
 }
+

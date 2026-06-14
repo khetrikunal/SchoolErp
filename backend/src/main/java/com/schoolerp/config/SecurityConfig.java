@@ -1,6 +1,9 @@
 package com.schoolerp.config;
 
 import com.schoolerp.security.jwt.JwtAuthFilter;
+import com.schoolerp.security.PreAuthRateLimitingFilter;
+import com.schoolerp.security.PostAuthRateLimitingFilter;
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.*;
@@ -20,9 +23,12 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final PreAuthRateLimitingFilter preAuthRateLimitingFilter;
+    private final PostAuthRateLimitingFilter postAuthRateLimitingFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,21 +48,23 @@ public class SecurityConfig {
             )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((req, res, authException) -> {
-                    System.out.println("[SecurityConfig] authenticationEntryPoint triggered: "
-                        + authException.getClass().getName() + " msg=" + authException.getMessage());
+                    log.warn("[SecurityConfig] Unauthorized access attempt: {} - msg: {}", 
+                        authException.getClass().getSimpleName(), authException.getMessage());
                     res.setStatus(401);
                     res.setContentType("application/json");
                     res.getWriter().write("{\"message\":\"Unauthorized\"}");
                 })
                 .accessDeniedHandler((req, res, accessDeniedException) -> {
-                    System.out.println("[SecurityConfig] accessDeniedHandler triggered: "
-                        + accessDeniedException.getClass().getName() + " msg=" + accessDeniedException.getMessage());
+                    log.warn("[SecurityConfig] Access denied: {} - msg: {}", 
+                        accessDeniedException.getClass().getSimpleName(), accessDeniedException.getMessage());
                     res.setStatus(403);
                     res.setContentType("application/json");
                     res.getWriter().write("{\"message\":\"Forbidden\"}");
                 })
             )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+.addFilterBefore(preAuthRateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(postAuthRateLimitingFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -7,62 +7,45 @@ import com.schoolerp.repository.UserRepository;
 import com.schoolerp.security.jwt.JwtUtils;
 import com.schoolerp.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
-
     private final com.schoolerp.service.AuthenticationResolver authenticationResolver;
 
     @Override
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
-        System.out.println("[AuthServiceImpl] /api/auth/login called");
-        System.out.println("[AuthServiceImpl] request body: " + request);
+        log.info("[AuthServiceImpl] Login attempt started for identifier: {}", request.getIdentifier());
 
         String emailOrNull = request.getEmail();
         String identifier = request.getIdentifier();
 
-        System.out.println("[AuthServiceImpl] received email: " + emailOrNull);
-        System.out.println("[AuthServiceImpl] received identifier: " + identifier);
-
         try {
             // Resolve user by priority: email -> teacherId -> studentId
-            // JWT generation must remain stable (subject is still user.email)
             User resolvedUser = authenticationResolver.resolveUser(emailOrNull, identifier);
-            System.out.println("[AuthServiceImpl] user lookup result: " + resolvedUser);
+            log.debug("[AuthServiceImpl] User resolved: {}", resolvedUser.getEmail());
 
-            // Password match result is indirectly determined by authenticationManager.authenticate(...)
-            try {
-                System.out.println("[AuthServiceImpl] attempting authenticationManager.authenticate(...) for email=" + resolvedUser.getEmail());
-                authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(resolvedUser.getEmail(), request.getPassword())
-                );
-                System.out.println("[AuthServiceImpl] password match result: SUCCESS");
-            } catch (Exception e) {
-                System.out.println("[AuthServiceImpl] password match result: FAILED");
-                System.out.println("[AuthServiceImpl] exact auth exception causing 403:");
-                System.out.println("[AuthServiceImpl] exception class: " + e.getClass().getName());
-                System.out.println("[AuthServiceImpl] exception message: " + e.getMessage());
-                throw e;
-            }
-
+            // Authenticate exactly once
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(resolvedUser.getEmail(), request.getPassword())
             );
+            log.info("[AuthServiceImpl] Authentication successful for email: {}", resolvedUser.getEmail());
 
             User user = (User) authentication.getPrincipal();
 
-            // JWT validation result (sanity check)
+            // JWT generation
             String token = jwtUtils.generateToken(user);
-            boolean jwtValid = jwtUtils.validateToken(token);
-            System.out.println("[AuthServiceImpl] JWT validation result: " + jwtValid);
 
             return AuthResponse.builder()
                 .token(token).type("Bearer")
@@ -71,12 +54,9 @@ public class AuthServiceImpl implements AuthService {
                 .designation(user.getDesignation())
                 .build();
         } catch (Exception e) {
-            System.out.println("[AuthServiceImpl] login failed -> exact exception causing 403:");
-            System.out.println("[AuthServiceImpl] exception class: " + e.getClass().getName());
-            System.out.println("[AuthServiceImpl] exception message: " + e.getMessage());
+            log.error("[AuthServiceImpl] Login failed: {}", e.getMessage());
             throw e;
         }
     }
-
-
 }
+
