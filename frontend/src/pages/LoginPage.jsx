@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   GraduationCap, Eye, EyeOff, Loader2, Users,
@@ -17,37 +17,44 @@ const roleMeta = {
     label: 'Admin & Staff',
     hint: 'Use your admin credentials or staff email.',
     icon: ShieldCheck,
-    gradient: 'from-blue-600 to-blue-800',
-    light: 'bg-blue-50 text-blue-600',
+    accentBg: 'bg-admin',
   },
   teacher: {
     label: 'Educator',
     hint: 'Use your teacher credentials.',
     icon: Users,
-    gradient: 'from-emerald-600 to-teal-700',
-    light: 'bg-emerald-50 text-emerald-600',
+    accentBg: 'bg-teacher',
   },
   parent_student: {
     label: 'Family & Student',
     hint: 'Use your parent/student credentials.',
     icon: UserSquare2,
-    gradient: 'from-violet-600 to-purple-800',
-    light: 'bg-violet-50 text-violet-600',
+    accentBg: 'bg-student',
   },
 }
 
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { user, login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const role = useMemo(() => getRoleFromQuery(location.search), [location.search])
-  const meta = roleMeta[role] || { label: 'Sign In', hint: 'Enter your credentials to continue.', icon: School, gradient: 'from-blue-600 to-primary-700', light: 'bg-blue-50 text-blue-600' }
+  const meta = roleMeta[role] || { label: 'Sign In', hint: 'Enter your credentials to continue.', icon: School, accentBg: 'bg-primary-600' }
   const Icon = meta.icon
 
   const [form, setForm] = useState({ identifier: '', password: '' })
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+
+  // Auto-redirect if user is already authenticated
+  useEffect(() => {
+    if (user) {
+      const r = String(user.role || '').toUpperCase()
+      if (r === 'ADMIN') navigate('/admin')
+      else if (r === 'TEACHER') navigate('/teacher')
+      else if (r === 'STUDENT') navigate('/student')
+    }
+  }, [user, navigate])
 
   const validate = () => {
     const e = {}
@@ -66,8 +73,25 @@ export default function LoginPage() {
       const res = await login(form.identifier, form.password)
       const name = res?.name || res?.user?.name || 'User'
       toast.success(`Welcome, ${String(name).split(' ')[0]}!`)
-      const targets = { admin: '/admin', teacher: '/teacher', parent_student: '/student' }
-      navigate(targets[role] || '/login')
+      
+      // Determine redirection target based on actual role from response
+      const serverRole = res?.role || res?.user?.role || ''
+      const upperRole = String(serverRole).toUpperCase()
+      
+      let target = '/login'
+      if (upperRole === 'ADMIN') {
+        target = '/admin'
+      } else if (upperRole === 'TEACHER') {
+        target = '/teacher'
+      } else if (upperRole === 'STUDENT') {
+        target = '/student'
+      } else {
+        // Fallback to query-parameter role targets
+        const targets = { admin: '/admin', teacher: '/teacher', parent_student: '/student' }
+        target = targets[role] || '/login'
+      }
+      
+      navigate(target)
     } catch (err) {
       toast.error(err.message || 'Login failed')
     } finally {
@@ -76,25 +100,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-primary-900 to-blue-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 flex items-center justify-center p-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-primary-500/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-student/10 blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-md">
         {/* Back button */}
         <button onClick={() => navigate('/')}
-          className="flex items-center gap-1.5 text-blue-300 hover:text-white text-sm mb-6 transition-colors">
+          className="flex items-center gap-1.5 text-primary-300 hover:text-white text-sm mb-6 transition-colors cursor-pointer">
           <ArrowLeft size={16} /> Back to Home
         </button>
 
         {/* Card */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Header band */}
-          <div className={`bg-gradient-to-r ${meta.gradient} px-8 py-7 text-white text-center`}>
-            <div className="inline-flex w-16 h-16 rounded-2xl bg-white/20 items-center justify-center mb-3 backdrop-blur-sm">
+          <div className={`${meta.accentBg} px-8 py-7 text-white text-center`}>
+            <div className="inline-flex w-16 h-16 rounded-2xl bg-white/20 items-center justify-center mb-3">
               <Icon size={30} className="text-white" />
             </div>
             <h1 className="font-display font-bold text-2xl">Academia Connect</h1>
@@ -107,8 +131,9 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="label">Identifier</label>
+                <label htmlFor="login-identifier" className="label">Identifier</label>
                 <input
+                  id="login-identifier"
                   className={`input ${errors.identifier ? 'border-red-400 focus:ring-red-400' : ''}`}
                   type="text"
                   placeholder="Enter Email or Registration ID"
@@ -120,9 +145,10 @@ export default function LoginPage() {
 
 
               <div>
-                <label className="label">Password</label>
+                <label htmlFor="login-password" className="label">Password</label>
                 <div className="relative">
                   <input
+                    id="login-password"
                     className={`input pr-11 ${errors.password ? 'border-red-400 focus:ring-red-400' : ''}`}
                     type={show ? 'text' : 'password'}
                     placeholder="Enter your password"
@@ -130,7 +156,8 @@ export default function LoginPage() {
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                   />
                   <button type="button" onClick={() => setShow(!show)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                    aria-label={show ? 'Hide password' : 'Show password'}>
                     {show ? <EyeOff size={17} /> : <Eye size={17} />}
                   </button>
                 </div>
@@ -138,7 +165,7 @@ export default function LoginPage() {
               </div>
 
               <button type="submit" disabled={loading}
-                className={`btn-primary w-full py-3 text-sm mt-2 bg-gradient-to-r ${meta.gradient} hover:opacity-90`}>
+                className={`btn-primary w-full py-3 text-sm mt-2`}>
                 {loading
                   ? <><Loader2 size={16} className="animate-spin" /> Signing in...</>
                   : 'Sign In'
@@ -148,7 +175,7 @@ export default function LoginPage() {
 
             <p className="text-center text-xs text-gray-400 mt-6">
               Not your role?{' '}
-              <button onClick={() => navigate('/')} className="text-primary-600 font-semibold hover:underline">
+              <button onClick={() => navigate('/')} className="text-primary-600 font-semibold hover:underline cursor-pointer">
                 Choose a different portal
               </button>
             </p>
@@ -157,7 +184,7 @@ export default function LoginPage() {
 
         {/* Logo at bottom */}
         <div className="flex items-center justify-center gap-2 mt-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
             <GraduationCap size={16} className="text-white" />
           </div>
           <span className="text-white/60 text-sm font-medium">Academia Connect</span>

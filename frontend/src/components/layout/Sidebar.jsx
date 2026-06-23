@@ -15,8 +15,9 @@ import {
   Megaphone,
   LogOut,
   ChevronRight,
-  GraduationCap as Logo,
   ShieldCheck,
+  Sun,
+  Moon,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
@@ -75,9 +76,9 @@ export default function Sidebar({ onClose }) {
       : pathname.startsWith(to)
 
   const roleColors = {
-    ADMIN:   'bg-blue-600',
-    TEACHER: 'bg-emerald-600',
-    STUDENT: 'bg-violet-600',
+    ADMIN:   'bg-admin',
+    TEACHER: 'bg-teacher',
+    STUDENT: 'bg-student',
   }
   const dotColor = roleColors[role] || 'bg-primary-600'
 
@@ -104,7 +105,7 @@ export default function Sidebar({ onClose }) {
             <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name}</p>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
-              <p className="text-xs text-gray-400 capitalize">{user?.role?.toLowerCase()}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{user?.role?.toLowerCase()}</p>
             </div>
           </div>
         </div>
@@ -127,11 +128,14 @@ export default function Sidebar({ onClose }) {
 
       {/* Bottom */}
       <div className="px-3 pb-4 space-y-0.5 border-t border-gray-100 dark:border-gray-800 pt-3">
-        <button onClick={toggle} className="sidebar-link sidebar-inactive">
-          <span className="text-base leading-none">{dark ? '☀️' : '🌙'}</span>
+        <button onClick={toggle} className="sidebar-link sidebar-inactive cursor-pointer">
+          {dark
+            ? <Sun size={17} className="flex-shrink-0 text-amber-500" />
+            : <Moon size={17} className="flex-shrink-0 text-gray-400" />
+          }
           <span>{dark ? 'Light Mode' : 'Dark Mode'}</span>
         </button>
-        <button onClick={logout} className="sidebar-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+        <button onClick={logout} className="sidebar-link text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer">
           <LogOut size={17} />
           <span>Sign Out</span>
         </button>

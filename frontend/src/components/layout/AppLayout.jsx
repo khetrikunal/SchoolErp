@@ -31,19 +31,19 @@ export default function AppLayout({ children }) {
         <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-4 lg:px-6 flex-shrink-0 shadow-sm">
           <div className="flex items-center gap-3">
             <button onClick={() => setOpen(true)}
-              className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
               <Menu size={20} className="text-gray-500" />
             </button>
-            <div className="hidden sm:flex items-center gap-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2">
-              <Search size={15} className="text-gray-400" />
-              <span className="text-sm text-gray-400">Quick search...</span>
+            <div className="hidden sm:flex items-center gap-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2 text-gray-400 text-sm cursor-text">
+              <Search size={15} />
+              <span>Quick search...</span>
             </div>
           </div>
           <div className="hidden lg:block text-sm text-gray-500 dark:text-gray-400 absolute left-1/2 -translate-x-1/2">
-            Welcome back, <span className="font-semibold text-gray-800 dark:text-gray-200">{user?.name?.split(' ')[0]}</span> 👋
+            Welcome back, <span className="font-semibold text-gray-800 dark:text-gray-200">{user?.name?.split(' ')[0]}</span>
           </div>
           <div className="flex items-center gap-2 ml-auto">
-            <button className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            <button className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
               <Bell size={18} className="text-gray-500" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
             </button>

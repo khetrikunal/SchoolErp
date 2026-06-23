@@ -1,0 +1,19 @@
+# Ignore everything at the root level by default
+/*
+
+# Allow the frontend and backend folders
+!/frontend/
+!/backend/
+
+# Allow this .gitignore file itself
+!/.gitignore
+
+# Subdirectory specific ignores:
+**/node_modules/
+**/target/
+**/dist/
+**/.env
+**/.vite/
+**/.DS_Store
+**/*.class
+**/*.jar

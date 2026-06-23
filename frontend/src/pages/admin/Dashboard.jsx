@@ -9,7 +9,16 @@ import { statsService } from '../../services/api/statsService'
 import toast from 'react-hot-toast'
 import { fmt } from '../../utils/helpers'
 
-const PIE_COLORS = ['#6366f1', '#10b981', '#f59e0b']
+/* Brand-aligned chart palette */
+const CHART_PRIMARY = '#1b6b80'
+const CHART_SECONDARY = '#2d7a5e'
+const CHART_ACCENT = '#e8a838'
+const PIE_COLORS = [CHART_PRIMARY, CHART_SECONDARY, CHART_ACCENT]
+
+/* Skeleton block for loading states */
+function Skeleton({ className = '' }) {
+  return <div className={`animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl ${className}`} />
+}
 
 export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
@@ -43,7 +52,6 @@ export default function AdminDashboard() {
   }, [])
 
   const safeNum = (v, fallback = 0) => (typeof v === 'number' && Number.isFinite(v) ? v : fallback)
-  const safeStr = (v, fallback = '') => (v === null || v === undefined ? fallback : String(v))
 
   const totalStudents = safeNum(stats?.totalStudents, 0)
   const totalTeachers = safeNum(stats?.totalTeachers, 0)
@@ -93,16 +101,30 @@ export default function AdminDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
             <h1 className="page-title">Admin Dashboard</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Loading...</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Loading dashboard data...</p>
           </div>
-          <span className="badge badge-success self-start">● System Online</span>
+          <span className="badge badge-success self-start">Online</span>
         </div>
 
+        {/* Skeleton stat cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <StatCard icon={GraduationCap} label="Total Students" value={0} sub="" color="primary" />
-          <StatCard icon={Users} label="Total Teachers" value={0} sub="" color="emerald" />
-          <StatCard icon={School} label="Total Classes" value={0} sub="" color="amber" />
-          <StatCard icon={UserCheck} label="Avg Attendance" value={'0%'} sub="" color="blue" />
+          {[1,2,3,4].map(i => (
+            <div key={i} className="card p-5 space-y-3">
+              <div className="flex items-center gap-4">
+                <Skeleton className="w-12 h-12 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-6 w-14" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Skeleton charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="card p-5 lg:col-span-2"><Skeleton className="h-56 w-full" /></div>
+          <div className="card p-5"><Skeleton className="h-56 w-full" /></div>
         </div>
       </div>
     )
@@ -116,7 +138,7 @@ export default function AdminDashboard() {
             <h1 className="page-title">Admin Dashboard</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{error}</p>
           </div>
-          <span className="badge badge-success self-start">● System Online</span>
+          <span className="badge badge-success self-start">Online</span>
         </div>
         <div className="card p-6">
           <p className="text-sm text-gray-600 dark:text-gray-300">Dashboard data could not be loaded.</p>
@@ -133,7 +155,7 @@ export default function AdminDashboard() {
             <h1 className="page-title">Admin Dashboard</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">No dashboard data available.</p>
           </div>
-          <span className="badge badge-success self-start">● System Online</span>
+          <span className="badge badge-success self-start">Online</span>
         </div>
       </div>
     )
@@ -146,7 +168,7 @@ export default function AdminDashboard() {
           <h1 className="page-title">Admin Dashboard</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Academic Year 2023–24 · {fmt(new Date())}</p>
         </div>
-        <span className="badge badge-success self-start">● System Online</span>
+        <span className="badge badge-success self-start">Online</span>
       </div>
 
       {/* Stats */}
@@ -186,21 +208,21 @@ export default function AdminDashboard() {
         <Card className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display font-bold text-gray-800 dark:text-white">Monthly Attendance</h2>
-            <span className="badge badge-success text-xs">↑ 2.3% vs last month</span>
+            <span className="badge badge-success text-xs">+2.3% vs last month</span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={chartAttendance}>
               <defs>
                 <linearGradient id="gPresent" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15}/>
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                  <stop offset="5%" stopColor={CHART_PRIMARY} stopOpacity={0.15}/>
+                  <stop offset="95%" stopColor={CHART_PRIMARY} stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
-              <XAxis dataKey="month" tick={{fontSize:12,fill:'#9ca3af'}}/>
-              <YAxis tick={{fontSize:12,fill:'#9ca3af'}}/>
-              <Tooltip contentStyle={{borderRadius:12,border:'none',boxShadow:'0 4px 16px rgba(0,0,0,.1)'}}/>
-              <Area type="monotone" dataKey="present" stroke="#6366f1" strokeWidth={2.5} fill="url(#gPresent)" name="Present %"/>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb"/>
+              <XAxis dataKey="month" tick={{fontSize:12,fill:'#6b7280'}}/>
+              <YAxis tick={{fontSize:12,fill:'#6b7280'}}/>
+              <Tooltip contentStyle={{borderRadius:12,border:'1px solid #e5e7eb',boxShadow:'0 4px 16px rgba(0,0,0,.06)'}}/>
+              <Area type="monotone" dataKey="present" stroke={CHART_PRIMARY} strokeWidth={2.5} fill="url(#gPresent)" name="Present %"/>
             </AreaChart>
           </ResponsiveContainer>
         </Card>
@@ -210,7 +232,7 @@ export default function AdminDashboard() {
           <ResponsiveContainer width="100%" height={150}>
             <PieChart>
               <Pie data={chartEnrollment} cx="50%" cy="50%" innerRadius={38} outerRadius={62} dataKey="students" paddingAngle={3}>
-                {chartEnrollment.map((_,i)=><Cell key={i} fill={PIE_COLORS[i]}/>)}
+                {chartEnrollment.map((_,i)=><Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]}/>)}
               </Pie>
               <Tooltip/>
             </PieChart>
@@ -219,7 +241,7 @@ export default function AdminDashboard() {
             {chartEnrollment.map((d,i)=>(
               <div key={d.grade} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{background:PIE_COLORS[i]}}/>
+                  <span className="w-2.5 h-2.5 rounded-full" style={{background:PIE_COLORS[i % PIE_COLORS.length]}}/>
                   <span className="text-gray-600 dark:text-gray-400">{d.grade}</span>
                 </div>
                 <span className="font-bold text-gray-800 dark:text-gray-200">{d.students}</span>
@@ -234,11 +256,11 @@ export default function AdminDashboard() {
         <h2 className="font-display font-bold text-gray-800 dark:text-white mb-4">Subject Performance — Class Average</h2>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={chartPerformance} barSize={36}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0"/>
-            <XAxis dataKey="subject" tick={{fontSize:12,fill:'#9ca3af'}}/>
-            <YAxis domain={[0,100]} tick={{fontSize:12,fill:'#9ca3af'}}/>
-            <Tooltip contentStyle={{borderRadius:12,border:'none',boxShadow:'0 4px 16px rgba(0,0,0,.1)'}}/>
-            <Bar dataKey="avg" fill="#6366f1" radius={[6,6,0,0]} name="Average %"/>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb"/>
+            <XAxis dataKey="subject" tick={{fontSize:12,fill:'#6b7280'}}/>
+            <YAxis domain={[0,100]} tick={{fontSize:12,fill:'#6b7280'}}/>
+            <Tooltip contentStyle={{borderRadius:12,border:'1px solid #e5e7eb',boxShadow:'0 4px 16px rgba(0,0,0,.06)'}}/>
+            <Bar dataKey="avg" fill={CHART_PRIMARY} radius={[6,6,0,0]} name="Average %"/>
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -254,7 +276,7 @@ export default function AdminDashboard() {
             {(recentNotices || []).slice(0, 4).map((n) => (
 
 
-              <div key={n.id} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
+              <div key={n.id} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <div className="w-8 h-8 rounded-xl bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center flex-shrink-0">
                   <Bell size={13} className="text-primary-500"/>
                 </div>
@@ -278,7 +300,7 @@ export default function AdminDashboard() {
           <div className="space-y-2">
             {upcomingEvents.map((ev) => (
 
-              <div key={ev.id} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
+              <div key={ev.id} className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center flex-shrink-0 text-center">
                   <p className="text-xs font-bold text-amber-600 leading-none">{new Date(ev.date).getDate()}</p>
                   <p className="text-[9px] text-amber-400 uppercase">{new Date(ev.date).toLocaleString('en',{month:'short'})}</p>

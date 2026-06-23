@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  ArrowRight, BarChart3, BookOpen, Bus, CalendarDays, CheckCircle2,
+  ArrowRight, BarChart3, BookOpen, CalendarDays, CheckCircle2,
   ChevronRight, Clock, CreditCard, GraduationCap, LayoutDashboard,
-  Mail, MapPin, Menu, Phone, ShieldCheck, Sparkles, Star, Users, X,
-  School, Building2, UserCheck, Bell, Award, TrendingUp, Play,
-  Zap, Globe, Lock, ChevronDown,
+  Mail, MapPin, Menu, Phone, ShieldCheck, Star, Users, X,
+  School, Building2, UserCheck,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
@@ -18,79 +17,70 @@ const navLinks = [
 ]
 
 const stats = [
-  { label: 'Students managed',    value: '48K+', icon: GraduationCap, color: 'text-blue-500' },
-  { label: 'Active teachers',     value: '3.2K', icon: Users,         color: 'text-emerald-500' },
-  { label: 'Partner schools',     value: '180+', icon: Building2,     color: 'text-violet-500' },
-  { label: 'Attendance accuracy', value: '98%',  icon: CheckCircle2,  color: 'text-amber-500' },
+  { label: 'Students managed',    value: '48K+', icon: GraduationCap, color: 'text-primary-600' },
+  { label: 'Active teachers',     value: '3.2K', icon: Users,         color: 'text-teacher' },
+  { label: 'Partner schools',     value: '180+', icon: Building2,     color: 'text-student' },
+  { label: 'Attendance accuracy', value: '98%',  icon: CheckCircle2,  color: 'text-amber-600' },
 ]
 
 const roleCards = [
   {
     key: 'admin',
-    eyebrow: 'ADMIN & STAFF',
     title: 'School Administrators',
-    description: 'Manage records, fees, staff, and campus resources.',
+    description: 'Manage records, fees, staff, and campus resources from a single dashboard.',
     action: 'Access Admin Portal',
     role: 'admin',
-    gradient: 'from-blue-600 to-blue-800',
-    lightBg: 'bg-blue-50',
-    iconBg: 'bg-blue-600',
+    gradient: 'from-admin to-admin-dark',
     icon: (
       <svg viewBox="0 0 64 64" className="w-14 h-14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="32" cy="32" r="30" fill="#EFF6FF"/>
-        <path d="M32 12L44 20v6H20v-6L32 12z" fill="#2563EB"/>
-        <rect x="20" y="26" width="24" height="20" fill="#3B82F6"/>
-        <rect x="26" y="38" width="12" height="8" fill="#BFDBFE"/>
+        <circle cx="32" cy="32" r="30" fill="#e8f2f7"/>
+        <path d="M32 12L44 20v6H20v-6L32 12z" fill="#2d6a8a"/>
+        <rect x="20" y="26" width="24" height="20" fill="#3d8ab0"/>
+        <rect x="26" y="38" width="12" height="8" fill="#b8dae8"/>
         <circle cx="32" cy="22" r="3" fill="white"/>
-        <path d="M42 24l4 4-2 2-4-4 2-2z" fill="#1D4ED8"/>
-        <circle cx="44" cy="30" r="8" fill="#1D4ED8"/>
+        <path d="M42 24l4 4-2 2-4-4 2-2z" fill="#1a4a62"/>
+        <circle cx="44" cy="30" r="8" fill="#1a4a62"/>
         <path d="M40 30l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
     key: 'teacher',
-    eyebrow: 'TEACHERS',
     title: 'Educator Workspace',
-    description: 'Grade assignments, track progress, and create lesson plans.',
-    action: 'Login to Teacher Dashboard',
+    description: 'Grade assignments, track progress, and build lesson plans in one place.',
+    action: 'Open Teacher Dashboard',
     role: 'teacher',
-    gradient: 'from-emerald-600 to-teal-700',
-    lightBg: 'bg-emerald-50',
-    iconBg: 'bg-emerald-600',
+    gradient: 'from-teacher to-teacher-dark',
     icon: (
       <svg viewBox="0 0 64 64" className="w-14 h-14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="32" cy="32" r="30" fill="#F0FDF4"/>
-        <rect x="14" y="18" width="36" height="28" rx="2" fill="#D1FAE5"/>
-        <rect x="14" y="18" width="36" height="8" rx="2" fill="#059669"/>
-        <circle cx="32" cy="14" r="5" fill="#F87171"/>
-        <path d="M27 14 Q32 8 37 14" fill="#EF4444"/>
-        <rect x="20" y="32" width="10" height="2" rx="1" fill="#6EE7B7"/>
-        <rect x="20" y="36" width="14" height="2" rx="1" fill="#6EE7B7"/>
-        <rect x="20" y="40" width="8"  height="2" rx="1" fill="#6EE7B7"/>
-        <circle cx="42" cy="38" r="7" fill="#059669"/>
+        <circle cx="32" cy="32" r="30" fill="#e8f5ef"/>
+        <rect x="14" y="18" width="36" height="28" rx="2" fill="#b8e8d0"/>
+        <rect x="14" y="18" width="36" height="8" rx="2" fill="#2d7a5e"/>
+        <circle cx="32" cy="14" r="5" fill="#e87070"/>
+        <path d="M27 14 Q32 8 37 14" fill="#d45050"/>
+        <rect x="20" y="32" width="10" height="2" rx="1" fill="#6ecaa0"/>
+        <rect x="20" y="36" width="14" height="2" rx="1" fill="#6ecaa0"/>
+        <rect x="20" y="40" width="8"  height="2" rx="1" fill="#6ecaa0"/>
+        <circle cx="42" cy="38" r="7" fill="#2d7a5e"/>
         <path d="M38.5 38l2.5 2.5L44.5 35" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
     key: 'parent_student',
-    eyebrow: 'PARENTS & STUDENTS',
     title: 'Family & Student Hub',
-    description: 'View grades, view attendance, communicate, and pay fees.',
-    action: 'Go to Parent/Student Portal',
+    description: 'View grades, check attendance, and stay connected with teachers.',
+    action: 'Go to Student Portal',
     role: 'parent_student',
-    gradient: 'from-violet-600 to-purple-800',
-    lightBg: 'bg-violet-50',
-    iconBg: 'bg-violet-600',
+    gradient: 'from-student to-student-dark',
     icon: (
       <svg viewBox="0 0 64 64" className="w-14 h-14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="32" cy="32" r="30" fill="#F5F3FF"/>
-        <circle cx="22" cy="24" r="7" fill="#7C3AED"/>
-        <path d="M10 46c0-6.627 5.373-12 12-12s12 5.373 12 12" fill="#8B5CF6"/>
-        <circle cx="44" cy="20" r="5" fill="#A78BFA"/>
-        <path d="M36 40c0-4.418 3.582-8 8-8s8 3.582 8 8" fill="#C4B5FD"/>
-        <circle cx="32" cy="44" r="4" fill="#DDD6FE"/>
+        <circle cx="32" cy="32" r="30" fill="#f0edfc"/>
+        <circle cx="22" cy="24" r="7" fill="#6a5acd"/>
+        <path d="M10 46c0-6.627 5.373-12 12-12s12 5.373 12 12" fill="#7b6be0"/>
+        <circle cx="44" cy="20" r="5" fill="#9085d8"/>
+        <path d="M36 40c0-4.418 3.582-8 8-8s8 3.582 8 8" fill="#b3aae8"/>
+        <circle cx="32" cy="44" r="4" fill="#d0cbf0"/>
       </svg>
     ),
   },
@@ -102,28 +92,28 @@ const featureCards = [
     description: 'Instant classroom marking with absence alerts and trend insights.',
     icon: Clock,
     image: 'https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=900&q=80',
-    color: 'bg-blue-500',
+    color: 'bg-primary-600',
   },
   {
-    title: 'Automated Fee Collection',
+    title: 'Fee Collection',
     description: 'Collect, reconcile, and report fees with fewer manual steps.',
     icon: CreditCard,
     image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80',
-    color: 'bg-emerald-500',
+    color: 'bg-teacher',
   },
   {
-    title: 'Interactive Timetable',
+    title: 'Timetable Builder',
     description: 'Build clash-free schedules for classes, teachers, rooms, and exams.',
     icon: CalendarDays,
     image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=900&q=80',
     color: 'bg-amber-500',
   },
   {
-    title: 'Real-Time Bus Tracking',
-    description: 'Keep families informed with route visibility and safety updates.',
-    icon: Bus,
+    title: 'Campus Communication',
+    description: 'Notices, events, and homework reach every family in real time.',
+    icon: Users,
     image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=900&q=80',
-    color: 'bg-violet-500',
+    color: 'bg-student',
   },
 ]
 
@@ -133,30 +123,30 @@ const testimonials = [
     name: 'Anika Rao',
     role: 'Principal, Greenfield Academy',
     initials: 'AR',
-    color: 'bg-blue-500',
+    color: 'bg-primary-600',
   },
   {
     quote: 'Teachers save time every morning, and parents finally receive updates without waiting for manual follow-ups.',
     name: 'Daniel Mathew',
     role: 'Operations Head, Northstar School',
     initials: 'DM',
-    color: 'bg-emerald-500',
+    color: 'bg-teacher',
   },
   {
     quote: 'The dashboard gives our leadership team a clear picture of attendance, collections, and daily school activity.',
     name: 'Meera Shah',
     role: 'Director, Heritage Public School',
     initials: 'MS',
-    color: 'bg-violet-500',
+    color: 'bg-student',
   },
 ]
 
 const trustedSchools = ['Northstar', 'Greenfield', 'Oakridge', 'Brighton', 'Scholars', 'Riverdale']
 
 const reasons = [
-  { icon: Sparkles, title: 'Designed for every campus workflow', desc: 'Admissions, attendance, fees, notices, classes, and reports live in one elegant operating layer.' },
+  { icon: LayoutDashboard, title: 'One dashboard for every campus workflow', desc: 'Admissions, attendance, fees, notices, classes, and reports live in one operating layer.' },
   { icon: ShieldCheck, title: 'Secure role-based access', desc: 'Admins, teachers, students, and families see only what matters to their daily responsibilities.' },
-  { icon: BarChart3, title: 'Insightful decisions in real time', desc: 'Track campus health, student progress, finance updates, and communication performance at a glance.' },
+  { icon: BarChart3, title: 'Decisions backed by real-time data', desc: 'Track campus health, student progress, finance updates, and communication performance at a glance.' },
 ]
 
 /* ─── sub-components ────────────────────────────────── */
@@ -171,7 +161,7 @@ function Logo({ inverse }) {
         <p className={`text-base font-display font-bold leading-tight ${inverse ? 'text-white' : 'text-gray-900'}`}>
           Academia Connect
         </p>
-        <p className={`text-xs font-medium ${inverse ? 'text-blue-200' : 'text-gray-500'}`}>
+        <p className={`text-xs font-medium ${inverse ? 'text-primary-200' : 'text-gray-500'}`}>
           School Management Suite
         </p>
       </div>
@@ -181,17 +171,16 @@ function Logo({ inverse }) {
 
 function RoleCard({ item, onAction }) {
   return (
-    <article className="group flex flex-col rounded-2xl bg-white border border-gray-100 shadow-card p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover hover:border-blue-100">
+    <article className="group flex flex-col rounded-2xl bg-white border border-gray-100 shadow-card p-7 transition-all duration-200 hover:shadow-card-hover hover:border-primary-200">
       <div className="flex justify-center mb-5">
         {item.icon}
       </div>
-      <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">{item.eyebrow}</p>
       <h3 className="text-center text-xl font-display font-bold text-gray-900 mb-3">{item.title}</h3>
-      <p className="text-center text-sm text-gray-500 leading-relaxed flex-1 mb-6">{item.description}</p>
+      <p className="text-center text-sm text-gray-600 leading-relaxed flex-1 mb-6">{item.description}</p>
       <button
         type="button"
         onClick={onAction}
-        className={`w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-200 active:scale-95 bg-gradient-to-r ${item.gradient} hover:opacity-90 shadow-sm`}
+        className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white transition-colors duration-200 active:scale-[0.97] bg-primary-600 hover:bg-primary-700 shadow-btn cursor-pointer"
       >
         {item.action}
         <ArrowRight size={15} />
@@ -236,7 +225,7 @@ export default function LandingPage() {
       <header className={`sticky top-0 z-50 transition-all duration-300
         ${scrolled ? 'bg-white/95 backdrop-blur-xl shadow-sm border-b border-gray-100' : 'bg-white/90 backdrop-blur-sm'}`}>
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <button type="button" onClick={() => navigate('/')} className="focus:outline-none">
+          <button type="button" onClick={() => navigate('/')} className="focus:outline-none cursor-pointer">
             <Logo />
           </button>
 
@@ -253,14 +242,14 @@ export default function LandingPage() {
           {/* Desktop CTA */}
           <div className="hidden sm:flex items-center gap-3">
             <button type="button" onClick={() => navigate('/login')}
-              className="px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl hover:bg-gray-100 transition-colors">
+              className="px-4 py-2 text-sm font-semibold text-gray-700 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
               Login
             </button>
           </div>
 
           {/* Mobile hamburger */}
           <button type="button" onClick={() => setMenuOpen(!menuOpen)}
-            className="sm:hidden p-2 rounded-xl border border-gray-200 text-gray-700">
+            className="sm:hidden p-2 rounded-xl border border-gray-200 text-gray-700 cursor-pointer">
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </nav>
@@ -276,7 +265,7 @@ export default function LandingPage() {
             ))}
             <div className="mt-3 flex flex-col gap-2">
               <button onClick={() => navigate('/login')} className="btn-secondary w-full justify-center">Login</button>
-              <button onClick={openPortal} className="btn-primary w-full justify-center">Get a Demo <ArrowRight size={15}/></button>
+              <button onClick={openPortal} className="btn-primary w-full justify-center">Schedule a Demo <ArrowRight size={15}/></button>
             </div>
           </div>
         )}
@@ -285,38 +274,34 @@ export default function LandingPage() {
       <main>
         {/* ── HERO ─────────────────────────────────── */}
         <section className="relative overflow-hidden">
-          {/* Background: school cityscape with blue gradient overlay */}
+          {/* Background */}
           <div className="absolute inset-0 z-0">
             <img
               src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1920&q=80"
               alt=""
               className="w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-blue-900/50 to-blue-950/90" />
+            <div className="absolute inset-0 bg-gradient-to-b from-primary-950/80 via-primary-900/60 to-primary-950/90" />
             <div className="absolute inset-0 hero-pattern" />
           </div>
 
           <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-0">
             {/* Hero text */}
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-semibold uppercase tracking-widest mb-6 backdrop-blur-sm">
-                <Zap size={12} className="text-yellow-400" />
-                Next-Gen School Management Platform
-              </div>
-              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-4">
-                Empower Your<br />
-                <span className="gradient-text">Educational Ecosystem</span>
+              <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-tight mb-5" style={{ textWrap: 'balance' }}>
+                Run your school from<br />
+                <span className="text-primary-300">a single dashboard</span>
               </h1>
-              <p className="text-blue-100 text-lg max-w-2xl mx-auto leading-relaxed">
-                Streamline communication, simplify administration, and maximize student success.
+              <p className="text-primary-100 text-lg max-w-2xl mx-auto leading-relaxed">
+                Attendance, grades, fees, notices, and timetables. One platform for administrators, teachers, and families.
               </p>
             </div>
 
             {/* Role login cards panel */}
             <div className="relative">
-              <div className="rounded-t-2xl bg-blue-950/80 backdrop-blur-xl border border-white/10 px-6 py-5">
-                <p className="text-center text-xs font-bold uppercase tracking-[0.25em] text-blue-200 mb-6">
-                  Seamless Logins for Every Role
+              <div className="rounded-t-2xl bg-primary-950/80 backdrop-blur-xl border border-white/10 px-6 py-5">
+                <p className="text-center text-sm font-semibold text-primary-200 mb-6">
+                  Choose your portal to sign in
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pb-2">
                   {roleCards.map((item) => (
@@ -336,8 +321,8 @@ export default function LandingPage() {
               return (
                 <article key={f.title} className="group relative h-52 lg:h-56 overflow-hidden">
                   <img src={f.image} alt={f.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/30 to-transparent" />
+                    className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/30 to-transparent transition-colors duration-300 group-hover:from-gray-950/90" />
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className={`inline-flex items-center justify-center w-9 h-9 rounded-lg ${f.color} mb-2`}>
                       <Icon size={16} className="text-white" />
@@ -387,19 +372,18 @@ export default function LandingPage() {
         </section>
 
         {/* ── WHY US ───────────────────────────────── */}
-        <section id="case-studies" className="bg-gradient-to-br from-primary-600 via-primary-700 to-blue-900 py-20 px-4 sm:px-6 lg:px-8">
+        <section id="case-studies" className="bg-primary-700 py-20 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
               <div className="text-white">
-                <span className="section-tag bg-white/20 text-white border-0">Why Academia Connect</span>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl mt-4 mb-5 leading-tight">
-                  Everything your school needs,<br/>built into one platform.
+                <h2 className="font-display font-bold text-3xl sm:text-4xl mb-5 leading-tight" style={{ textWrap: 'balance' }}>
+                  Everything your school needs, built into one platform.
                 </h2>
-                <p className="text-blue-100 text-base leading-relaxed mb-8">
-                  From admissions to graduation — manage every workflow without switching between tools.
+                <p className="text-primary-100 text-base leading-relaxed mb-8">
+                  From admissions to graduation, manage every workflow without switching between tools.
                 </p>
                 <button type="button" onClick={openPortal}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-primary-700 font-semibold text-sm hover:bg-blue-50 transition-all shadow-lg">
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-primary-700 font-semibold text-sm hover:bg-primary-50 transition-colors shadow-lg cursor-pointer">
                   Explore Features <ArrowRight size={16} />
                 </button>
               </div>
@@ -407,13 +391,13 @@ export default function LandingPage() {
                 {reasons.map((r) => {
                   const Icon = r.icon
                   return (
-                    <div key={r.title} className="glass rounded-2xl p-5 flex gap-4 items-start">
+                    <div key={r.title} className="rounded-2xl bg-white/10 border border-white/15 p-5 flex gap-4 items-start">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white">
                         <Icon size={20} />
                       </div>
                       <div>
                         <h3 className="font-semibold text-white mb-1">{r.title}</h3>
-                        <p className="text-sm text-blue-100 leading-relaxed">{r.desc}</p>
+                        <p className="text-sm text-primary-100 leading-relaxed">{r.desc}</p>
                       </div>
                     </div>
                   )
@@ -427,23 +411,22 @@ export default function LandingPage() {
         <section id="pricing" className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="rounded-3xl overflow-hidden shadow-2xl">
-              <div className="bg-gradient-to-r from-blue-900 to-primary-700 p-10 lg:p-14 grid gap-8 lg:grid-cols-[1fr_0.65fr] lg:items-center">
+              <div className="bg-primary-800 p-10 lg:p-14 grid gap-8 lg:grid-cols-[1fr_0.65fr] lg:items-center">
                 <div className="text-white">
-                  <span className="section-tag bg-white/15 text-white text-xs border-0">Flexible Pricing</span>
-                  <h2 className="font-display font-bold text-3xl sm:text-4xl mt-4 mb-4 leading-tight">
+                  <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4 leading-tight" style={{ textWrap: 'balance' }}>
                     Start with the modules your school needs most.
                   </h2>
-                  <p className="text-blue-100 leading-relaxed">
+                  <p className="text-primary-100 leading-relaxed">
                     Choose academics, finance, communication, transport, or a complete ERP rollout with guided onboarding.
                   </p>
                 </div>
-                <div className="rounded-2xl bg-white/10 border border-white/20 p-7 backdrop-blur-sm">
-                  <p className="text-blue-200 text-sm font-semibold">Implementation-ready</p>
+                <div className="rounded-2xl bg-white/10 border border-white/15 p-7">
+                  <p className="text-primary-200 text-sm font-semibold">Implementation-ready</p>
                   <p className="text-5xl font-display font-bold text-white mt-2">30 days</p>
-                  <p className="text-blue-200 text-sm mt-2 mb-6">Typical guided launch for a mid-sized school.</p>
+                  <p className="text-primary-200 text-sm mt-2 mb-6">Typical guided launch for a mid-sized school.</p>
                   <button type="button" onClick={openPortal}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-primary-700 font-semibold text-sm hover:bg-blue-50 transition-all shadow-lg">
-                    Get a Demo <ArrowRight size={16} />
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-primary-700 font-semibold text-sm hover:bg-primary-50 transition-colors shadow-lg cursor-pointer">
+                    Schedule a Demo <ArrowRight size={16} />
                   </button>
                 </div>
               </div>
@@ -455,9 +438,8 @@ export default function LandingPage() {
         <section className="bg-white py-20 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-12">
-              <span className="section-tag">Testimonials</span>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl mt-3 text-gray-900">
-                Loved by academic and operations teams.
+              <h2 className="font-display font-bold text-3xl sm:text-4xl text-gray-900">
+                What schools say about Academia Connect
               </h2>
             </div>
             <div className="grid gap-6 lg:grid-cols-3">
@@ -489,9 +471,8 @@ export default function LandingPage() {
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
               <div>
-                <span className="section-tag">Resources</span>
-                <h2 className="font-display font-bold text-3xl sm:text-4xl mt-3 mb-4 text-gray-900">
-                  ERP playbooks for growing schools.
+                <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4 text-gray-900" style={{ textWrap: 'balance' }}>
+                  Guides for schools adopting digital operations
                 </h2>
                 <p className="text-gray-500 leading-relaxed">
                   Give your leadership team the operational clarity needed to improve communication, compliance, and student outcomes.
@@ -499,10 +480,10 @@ export default function LandingPage() {
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 {[
-                  ['Implementation guide', 'Launch modules without overwhelming staff.', BookOpen, 'text-blue-500 bg-blue-50'],
-                  ['Parent engagement kit', 'Improve communication across families and advisors.', Users, 'text-violet-500 bg-violet-50'],
-                  ['Finance checklist', 'Standardize fee collection, receipts, and reporting.', CreditCard, 'text-emerald-500 bg-emerald-50'],
-                  ['Academic analytics', 'Turn attendance and grades into actionable insights.', BarChart3, 'text-amber-500 bg-amber-50'],
+                  ['Implementation guide', 'Launch modules without overwhelming staff.', BookOpen, 'text-primary-600 bg-primary-50'],
+                  ['Parent engagement kit', 'Improve communication across families and advisors.', Users, 'text-student bg-student-light'],
+                  ['Finance checklist', 'Standardize fee collection, receipts, and reporting.', CreditCard, 'text-teacher bg-teacher-light'],
+                  ['Academic analytics', 'Turn attendance and grades into actionable insights.', BarChart3, 'text-amber-600 bg-amber-50'],
                 ].map(([title, desc, Icon, colors]) => (
                   <article key={title} className="card-hover p-5 cursor-pointer">
                     <div className={`inline-flex w-10 h-10 rounded-xl items-center justify-center mb-3 ${colors}`}>
@@ -520,19 +501,16 @@ export default function LandingPage() {
         {/* ── FINAL CTA ─────────────────────────────── */}
         <section className="bg-white py-20 px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="rounded-3xl bg-gradient-to-br from-blue-900 via-primary-700 to-violet-800 p-12 shadow-2xl">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white text-xs font-bold uppercase tracking-widest mb-4">
-                <Sparkles size={11} /> Ready to modernize?
-              </span>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl text-white mb-4 leading-tight">
-                Bring administration, teaching, and family engagement into one connected ERP.
+            <div className="rounded-3xl bg-primary-800 p-12 shadow-2xl">
+              <h2 className="font-display font-bold text-3xl sm:text-4xl text-white mb-4 leading-tight" style={{ textWrap: 'balance' }}>
+                Bring administration, teaching, and family engagement into one connected platform.
               </h2>
-              <p className="text-blue-100 mb-8 leading-relaxed max-w-2xl mx-auto">
-                Book a guided demo and see how the platform adapts to your school workflows.
+              <p className="text-primary-100 mb-8 leading-relaxed max-w-2xl mx-auto">
+                Book a guided demo and see how the platform adapts to your school's workflows.
               </p>
               <button type="button" onClick={openPortal}
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-primary-700 font-bold text-sm hover:bg-blue-50 transition-all shadow-xl">
-                Get a Demo <ArrowRight size={16} />
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-primary-700 font-bold text-sm hover:bg-primary-50 transition-colors shadow-xl cursor-pointer">
+                Schedule a Demo <ArrowRight size={16} />
               </button>
             </div>
           </div>
@@ -546,14 +524,14 @@ export default function LandingPage() {
             <div>
               <Logo inverse />
               <p className="mt-4 text-sm text-gray-400 leading-relaxed max-w-xs">
-                A modern School Management ERP SaaS platform for connected, efficient, and data-informed campuses.
+                A modern School Management ERP for connected, efficient, and data-informed campuses.
               </p>
             </div>
             <div>
               <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-gray-500 mb-4">Navigation</h3>
               <div className="grid gap-2.5">
                 {navLinks.map((l) => (
-                  <a key={l.label} href={l.href} className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                  <a key={l.label} href={l.href} className="text-sm text-gray-400 hover:text-primary-400 transition-colors">
                     {l.label}
                   </a>
                 ))}
@@ -563,7 +541,7 @@ export default function LandingPage() {
               <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-gray-500 mb-4">Resources</h3>
               <div className="grid gap-2.5">
                 {['Implementation', 'Security', 'Support', 'Documentation'].map((item) => (
-                  <a key={item} href="#resources" className="text-sm text-gray-400 hover:text-blue-400 transition-colors">
+                  <a key={item} href="#resources" className="text-sm text-gray-400 hover:text-primary-400 transition-colors">
                     {item}
                   </a>
                 ))}
@@ -572,17 +550,17 @@ export default function LandingPage() {
             <address className="not-italic">
               <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-gray-500 mb-4">Contact</h3>
               <div className="grid gap-3 text-sm text-gray-400">
-                <span className="flex items-center gap-2.5"><Mail size={14} className="text-blue-400" /> support@academiaconnect.com</span>
-                <span className="flex items-center gap-2.5"><Phone size={14} className="text-blue-400" /> +91 98765 43210</span>
-                <span className="flex items-center gap-2.5"><MapPin size={14} className="text-blue-400" /> Pune, Maharashtra</span>
+                <span className="flex items-center gap-2.5"><Mail size={14} className="text-primary-400" /> support@academiaconnect.com</span>
+                <span className="flex items-center gap-2.5"><Phone size={14} className="text-primary-400" /> +91 98765 43210</span>
+                <span className="flex items-center gap-2.5"><MapPin size={14} className="text-primary-400" /> Pune, Maharashtra</span>
               </div>
             </address>
           </div>
           <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
-            <p>Copyright © {new Date().getFullYear()} Academia Connect. All rights reserved.</p>
+            <p>Copyright &copy; {new Date().getFullYear()} Academia Connect. All rights reserved.</p>
             <div className="flex gap-5">
-              <a href="#resources" className="hover:text-blue-400 transition-colors">Privacy</a>
-              <a href="#resources" className="hover:text-blue-400 transition-colors">Terms</a>
+              <a href="#resources" className="hover:text-primary-400 transition-colors">Privacy</a>
+              <a href="#resources" className="hover:text-primary-400 transition-colors">Terms</a>
             </div>
           </div>
         </div>

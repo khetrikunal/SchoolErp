@@ -1,0 +1,43 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html','./src/**/*.{js,jsx}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        display: ['Outfit', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        primary: {
+          50:  '#eef6f8',
+          100: '#d5eaef',
+          200: '#aed6e1',
+          300: '#7bbbcc',
+          400: '#4a9db3',
+          500: '#2e8298',
+          600: '#1b6b80',  /* brand anchor – deep teal */
+          700: '#175a6b',
+          800: '#164a58',
+          900: '#153e4a',
+          950: '#0a2630',
+        },
+        /* Role-specific accents */
+        admin:   { DEFAULT: '#2d6a8a', light: '#e8f2f7', dark: '#1a4a62' },
+        teacher: { DEFAULT: '#2d7a5e', light: '#e8f5ef', dark: '#1a5a42' },
+        student: { DEFAULT: '#6a5acd', light: '#f0edfc', dark: '#4a3a9d' },
+      },
+      borderRadius: {
+        'xl': '12px',
+        '2xl': '16px',
+        '3xl': '24px',
+      },
+      boxShadow: {
+        'card':       '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)',
+        'card-hover': '0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04)',
+        'btn':        '0 1px 2px rgba(0,0,0,0.08)',
+      },
+    },
+  },
+  plugins: [],
+}
